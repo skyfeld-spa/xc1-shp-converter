@@ -1,17 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>XC1 Converter</title>
+    <title>Skyfeld XC1 Converter</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0b1f4b;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container {
+            background: #122c6a;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        button {
+            background: #4CAF50;
+            border: none;
+            padding: 12px 20px;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        input {
+            margin: 20px 0;
+        }
+
+        img {
+            width: 120px;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Convertir SHP → XC-1</h2>
+<img src="/static/logo.png">
 
-<form action="/convertir" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" required>
-    <br><br>
-    <button type="submit">Convertir</button>
-</form>
+<div class="container">
+    <h1>Skyfeld Converter</h1>
+    <p>SHP → XC-1 listo</p>
+
+    <form action="/convertir" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <br>
+        <button type="submit">Convertir Archivo</button>
+    </form>
+</div>
 
 </body>
 </html>

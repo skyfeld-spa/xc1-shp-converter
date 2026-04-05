@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, send_file, render_template
 from converter import convertir
 from utils import zip_shapefile
@@ -10,6 +11,7 @@ def index():
 
 @app.route('/convertir', methods=['POST'])
 def convertir_archivo():
+
     file = request.files['file']
 
     input_path = "input.shp"
@@ -21,9 +23,12 @@ def convertir_archivo():
     try:
         convertir(input_path, output_path)
         zip_shapefile(output_path, zip_path)
+
         return send_file(zip_path, as_attachment=True)
+
     except Exception as e:
-        return f"Error: {str(e)}"
+        return f"<h2>Error:</h2><p>{str(e)}</p>"
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
