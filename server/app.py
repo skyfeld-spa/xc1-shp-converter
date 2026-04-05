@@ -1,34 +1,36 @@
-import os
-from flask import Flask, request, send_file, render_template
-from converter import convertir
-from utils import zip_shapefile
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
+import zipfile
 
 @app.route('/convertir', methods=['POST'])
 def convertir_archivo():
 
     file = request.files['file']
 
-    input_path = "input.shp"
-    output_path = "output.shp"
-    zip_path = "resultado.zip"
+    zip_path = "input.zip"
+    extract_folder = "data"
 
-    file.save(input_path)
+    file.save(zip_path)
+
+    # Extraer ZIP
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_folder)
+
+    # Buscar el .shp dentro
+    shp_file = None
+    for f in os.listdir(extract_folder):
+        if f.endswith(".shp"):
+            shp_file = os.path.join(extract_folder, f)
+
+    if not shp_file:
+        return "No se encontró archivo .shp en el ZIP"
+
+    output_path = "output.shp"
+    zip_output = "resultado.zip"
 
     try:
-        convertir(input_path, output_path)
-        zip_shapefile(output_path, zip_path)
+        convertir(shp_file, output_path)
+        zip_shapefile(output_path, zip_output)
 
-        return send_file(zip_path, as_attachment=True)
+        return send_file(zip_output, as_attachment=True)
 
     except Exception as e:
-        return f"<h2>Error:</h2><p>{str(e)}</p>"
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+        return f"Error: {str(e)}"
